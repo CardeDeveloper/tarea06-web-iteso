@@ -9,15 +9,15 @@ let game = {
 }
 
 //Aquí obten el input de titulo
-let title;
+let title = document.getElementById("inTitulo");
 //Aquí busca y guarda el elemento del botón de Generar Tablero
-let btnTab;
+let btnTab = document.getElementById("btnTablero");
 //Aquí busca y guarda el elemento del botón de Generar JSON
-let btnJson;
+let btnJson =document.getElementById("btnJson");
 //aquí guarda la única tabla en el html (no tiene id)
-let tab;
+let tab = document.getElementsByTagName("table")[0];
 //aquí guarda el botón de guardar de la ventana modal. 
-let btnGuardar;
+let btnGuardar =  document.getElementById("btSave");
 
 
 //almacenará la celda actual (cuando den clic en algún link a editar)
@@ -27,14 +27,23 @@ let cell;  //esta variable se usará después en la función de solicitarDatos()
 //añade un handler a keyup para que cuando el titulo tenga texto se active el boton
 // y si no tiene que se desactive  (añade o quita la clase disabled) 
 
-//<<<
+title.addEventListener("keyup", (e)=>{
+    if(title.value.trim() ==''){
+        if(!btnTab.classList.contains("disabled")) return btnTab.classList.add("disabled");
+        return;
+    
+        
+    }
+    return btnTab.classList.remove("disabled");
+     
+})
 
 
 /*
 *  Aquí añadele al botón de btnTablero un handler del evento click a la función generarTablero
 */
 
- //btnTab.on
+ btnTab.onclick = generarTablero;
 
 /* la función generar tablero:
 *  guarda en el objeto game los valores de titulo, row y cols
@@ -42,17 +51,31 @@ let cell;  //esta variable se usará después en la función de solicitarDatos()
 */
 function generarTablero(event) {
     //guarda en las variables titulo,  rows, y cols los elementos correspondientes del html
-    
-    let titulo = document.getElementById("inTitulo");
-    let rows = document.getElementById("inFilas");
-    let cols = document.getElementById("inColumnas");
-
+    event.preventDefault();
+    let titulo = title.value;
+    let rows = document.getElementById("inFilas").value;
+    let cols = document.getElementById("inColumnas").value;
+    console.log(rows)
     //muestra la tabla (propiedad hidden)
+    tab.removeAttribute("hidden");
     
     //guarda el  titulo en el objeto game
-    
+    game.titulo=titulo
     //guarda los valores  (si rows o cols es > 4 dejala en 4 si es menor a 2 dejala en 2)
-    
+    game.rows=rows
+    game.cols=cols
+    if(rows > 4){
+        game.rows=4
+    }
+    if(rows <2){
+        game.rows=2
+    }
+    if(cols > 4){
+        game.cols=4
+    }
+    if(cols <2){
+        game.cols=2
+    }
 
     //crea el arreglo de temas en el objeto game
    
@@ -68,11 +91,10 @@ function generarTablero(event) {
     
 
     //activar botón de generarJSON
+    btnJson.classList.remove("disabled");
     
 
-    //regresa falso o usa 
-    //event.preventDefault()
-    //return false;
+    return false;
 
 }
 
@@ -97,7 +119,7 @@ function solicitarDatos(event){
 }
 
 // Aquí asocia al btnJson el handler al hacer click con la función generarJSON
-//btnJson.on
+btnJson.onclick = generarJSON;
 
 
 //completa la función
@@ -107,7 +129,8 @@ function generarJSON(event){
 }
 
 //aquí asocia a btnGuardar 
-//btnGuardar.on
+//
+btnGuardar.onclick = guardarDatos;
 
 function guardarDatos(event){
     // realiza las operaciones dependiendo en caso de pregunta o tema
